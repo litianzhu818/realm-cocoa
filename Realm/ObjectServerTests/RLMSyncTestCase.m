@@ -137,7 +137,7 @@ static NSURL *syncDirectoryForChildProcess() {
                 encryptionKey:(nullable NSData *)encryptionKey
                    stopPolicy:(RLMSyncStopPolicy)stopPolicy
              immediatelyBlock:(nullable void(^)(void))block {
-    const NSTimeInterval timeout = 4;
+    const NSTimeInterval timeout = 10;
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     RLMSyncManager.sharedManager.sessionCompletionNotifier = ^(NSError *error) {
         if (error) {
@@ -189,7 +189,7 @@ static NSURL *syncDirectoryForChildProcess() {
                              theUser = user;
                              [expectation fulfill];
                          }];
-    [self waitForExpectationsWithTimeout:4.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
     XCTAssertTrue(theUser.state == RLMSyncUserStateActive,
                   @"User should have been valid, but wasn't. (process: %@)", process);
     return theUser;
@@ -209,7 +209,7 @@ static NSURL *syncDirectoryForChildProcess() {
                                          theError = err;
                                          [ex fulfill];
                                      }];
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+    [self waitForExpectationsWithTimeout:60 handler:nil];
     if (error) {
         *error = theError;
     }
@@ -229,7 +229,7 @@ static NSURL *syncDirectoryForChildProcess() {
                                                         theError = err;
                                                         [ex fulfill];
                                                     }];
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+    [self waitForExpectationsWithTimeout:60 handler:nil];
     if (error) {
         *error = theError;
     }

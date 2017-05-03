@@ -174,7 +174,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
                 }
                 // Wait for the child process to upload all the data.
                 executeChild()
-                waitForExpectations(timeout: 10.0, handler: nil)
+                waitForExpectations(timeout: 60, handler: nil)
                 token!.stop()
                 XCTAssert(callCount > 1)
                 XCTAssert(transferred >= transferrable)
@@ -220,7 +220,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
                     realm.add(SwiftHugeSyncObject())
                 }
             }
-            waitForExpectations(timeout: 10.0, handler: nil)
+            waitForExpectations(timeout: 60, handler: nil)
             token!.stop()
             XCTAssert(callCount > 1)
             XCTAssert(transferred >= transferrable)
@@ -260,7 +260,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
                     XCTAssert(try! Realm(configuration: config).isEmpty)
                 }
                 XCTAssertFalse(RLMHasCachedRealmForPath(pathOnDisk))
-                waitForExpectations(timeout: 10.0, handler: nil)
+                waitForExpectations(timeout: 60, handler: nil)
                 XCTAssertGreaterThan(fileSize(path: pathOnDisk), sizeBefore)
                 XCTAssertFalse(RLMHasCachedRealmForPath(pathOnDisk))
             } else {
@@ -341,7 +341,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
             managementRealm.add(change)
         }
 
-        waitForExpectations(timeout: 2)
+        waitForExpectations(timeout: 10)
         token.stop()
     }
 
@@ -368,7 +368,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
                 managementRealm.add(permissionOffer)
             }
 
-            waitForExpectations(timeout: 2)
+            waitForExpectations(timeout: 10)
             notificationToken.stop()
         } catch {
             XCTFail("Got an error: \(error) (process: \(isParent ? "parent" : "child"))")
@@ -404,7 +404,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
                 managementRealm.add(permissionOffer)
             }
 
-            waitForExpectations(timeout: 2)
+            waitForExpectations(timeout: 10)
             permissionOfferNotificationToken.stop()
 
             let userB = try synchronouslyLogInUser(for: basicCredentials(register: isParent, usernameSuffix: "_B"), server: authURL)
@@ -438,7 +438,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
                 managementRealm.add(permissionOfferResponse)
             }
 
-            waitForExpectations(timeout: 2)
+            waitForExpectations(timeout: 10)
             permissionOfferResponseNotificationToken.stop()
 
             _ = try synchronouslyOpenRealm(url: URL(string: responseRealmUrl!)!, user: userB)

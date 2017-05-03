@@ -81,7 +81,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
 /// A non-existsing user should not be able to log in and a corresponding error should be generated.
@@ -101,7 +101,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
 /// Registering a user with existing username should return corresponding error.
@@ -123,7 +123,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
 /// Errors reported in RLMSyncManager.errorHandler shouldn't contain sync error domain errors as underlying error
@@ -151,7 +151,7 @@
         [expectation fulfill];
     };
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
 /// The pre-emptive token refresh subsystem should function, and properly refresh the token.
@@ -259,14 +259,14 @@
             XCTAssertNil(error);
             [ex fulfill];
         }];
-        [self waitForExpectationsWithTimeout:2.0 handler:nil];
+        [self waitForExpectationsWithTimeout:10 handler:nil];
         [user logOut];
         ex = [self expectationWithDescription:@"change password callback invoked"];
         [user changePassword:@"fail" completion:^(NSError * _Nullable error) {
             XCTAssertNotNil(error);
             [ex fulfill];
         }];
-        [self waitForExpectationsWithTimeout:2.0 handler:nil];
+        [self waitForExpectationsWithTimeout:10 handler:nil];
     }
     // Fail to log in with original password.
     {
@@ -285,7 +285,7 @@
 
             [ex fulfill];
         }];
-        [self waitForExpectationsWithTimeout:2.0 handler:nil];
+        [self waitForExpectationsWithTimeout:10 handler:nil];
     }
     // Successfully log in with new password.
     {
@@ -1078,7 +1078,7 @@
         }];
         // Wait for the child process to upload everything.
         RLMRunChildAndWait();
-        [self waitForExpectationsWithTimeout:10.0 handler:nil];
+        [self waitForExpectationsWithTimeout:60 handler:nil];
         [token stop];
         // The notifier should have been called at least twice: once at the beginning and at least once
         // to report progress.
@@ -1141,7 +1141,7 @@
     }
     [realm commitWriteTransaction];
     // Wait for upload to begin and finish
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+    [self waitForExpectationsWithTimeout:60 handler:nil];
     [token stop];
     // The notifier should have been called at least twice: once at the beginning and at least once
     // to report progress.
@@ -1189,7 +1189,7 @@
             XCTAssertTrue([[RLMRealm realmWithConfiguration:c error:nil] isEmpty]);
         }
         XCTAssertNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String));
-        [self waitForExpectationsWithTimeout:10.0 handler:nil];
+        [self waitForExpectationsWithTimeout:60 handler:nil];
         XCTAssertGreaterThan(fileSize(c.pathOnDisk), sizeBefore);
         XCTAssertNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String));
     } else {
@@ -1239,7 +1239,7 @@
         NSUInteger sizeBefore = fileSize(c.pathOnDisk);
         XCTAssertGreaterThan(sizeBefore, 0U);
         XCTAssertNotNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String));
-        [self waitForExpectationsWithTimeout:10.0 handler:nil];
+        [self waitForExpectationsWithTimeout:60 handler:nil];
         XCTAssertGreaterThan(fileSize(c.pathOnDisk), sizeBefore);
         XCTAssertNotNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String));
         CHECK_COUNT(NUMBER_OF_BIG_OBJECTS, HugeSyncObject, realm);
@@ -1281,7 +1281,7 @@
         RLMRealm *realm = [RLMRealm realmWithConfiguration:c error:nil];
         CHECK_COUNT(0, HugeSyncObject, realm);
         XCTAssertNotNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String));
-        [self waitForExpectationsWithTimeout:10.0 handler:nil];
+        [self waitForExpectationsWithTimeout:60 handler:nil];
         CHECK_COUNT(NUMBER_OF_BIG_OBJECTS, HugeSyncObject, realm);
         XCTAssertNotNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String));
     } else {
@@ -1352,7 +1352,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission change object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 }
@@ -1546,7 +1546,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission change object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 }
@@ -1646,7 +1646,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission offer object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 }
@@ -1694,7 +1694,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission offer object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 }
@@ -1747,7 +1747,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission offer object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 
@@ -1791,7 +1791,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission offer response object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 
@@ -1834,7 +1834,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission offer response object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 }
@@ -1876,7 +1876,7 @@
     } error:&error];
     XCTAssertNil(error, @"Error when writing permission offer response object: %@", error);
 
-    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 
     [token stop];
 }
