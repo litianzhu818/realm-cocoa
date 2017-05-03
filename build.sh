@@ -13,6 +13,8 @@
 set -o pipefail
 set -e
 
+source ./scripts/bandwidth_throttling.sh
+
 source_root="$(dirname "$0")"
 
 # You can override the version of the core library
@@ -853,6 +855,37 @@ case "$COMMAND" in
         sh build.sh download-object-server
         sh build.sh test-osx-object-server
         sh build.sh reset-object-server
+        exit 0
+        ;;
+    "verify-osx-object-server-3G-network")
+        sh build.sh download-object-server
+
+        # clear any previous sudo permission
+        sudo -k
+        # Bandwidth: 780 kbps, Packets Dropped: 0%, Delay: 100 ms
+        # same setting as 3G preset of Network Link Conditioner
+        enable_bandwidth_throttling '780Kbit/s' 0 100
+        trap 'disable_bandwidth_throttling' EXIT ERR SIGINT
+
+        sh build.sh test-osx-object-server
+        sh build.sh reset-object-server
+
+        exit 0
+        ;;
+
+    "verify-osx-object-server-no-network")
+        sh build.sh download-object-server
+
+        # clear any previous sudo permission
+        sudo -k
+        # Bandwidth: 40 mbps, Packets Dropped: 100%, Delay: 0 ms
+        # 100% packet loss
+        enable_bandwidth_throttling '40Mbit/s' 100 0
+        trap 'disable_bandwidth_throttling' EXIT ERR SIGINT
+
+        sh build.sh test-osx-object-server
+        sh build.sh reset-object-server
+
         exit 0
         ;;
 
