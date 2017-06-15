@@ -708,7 +708,8 @@ case "$COMMAND" in
         ;;
 
     "test-osx-object-server")
-        xc "-scheme 'Object Server Tests' -configuration $CONFIGURATION -sdk macosx test"
+        xc "-scheme 'Object Server Tests' -configuration $CONFIGURATION -sdk macosx test \
+         -only-testing:ObjectServerTests/RLMObjectServerTests/testAddObjectsWithReconnection"
         exit 0
         ;;
 

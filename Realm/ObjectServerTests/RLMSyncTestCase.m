@@ -176,12 +176,14 @@ static NSURL *syncDirectoryForChildProcess() {
 
 - (RLMSyncUser *)logInUserForCredentials:(RLMSyncCredentials *)credentials
                                   server:(NSURL *)url {
+    NSLog(@"%@", @"===============");
     return [self logInUserForCredentials:credentials server:url simulateReconnection:NO];
 }
 
 - (RLMSyncUser *)logInUserForCredentials:(RLMSyncCredentials *)credentials
                                   server:(NSURL *)url
                     simulateReconnection:(BOOL)simulateReconnection {
+    NSLog(@"%@", @"+++++++++++++++");
     NSString *process = self.isParent ? @"parent" : @"child";
     __block RLMSyncUser *theUser = nil;
     if (simulateReconnection) {

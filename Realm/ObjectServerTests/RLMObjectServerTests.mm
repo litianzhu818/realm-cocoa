@@ -466,25 +466,32 @@
 - (void)verifyAddObjectsWithUsername:(NSString *)username
                             relamURL:(NSURL *)url
                 simulateReconnection:(BOOL)simulateReconnection {
+    NSLog(@"%s", __func__);
+    NSLog(@"isParent: %d", self.isParent);
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:username
                                                                                             register:self.isParent]
                                                server:[RLMObjectServerTests authServerURL]];
-    RLMRealm *realm = [self openRealmForURL:url user:user];
+    NSLog(@"Login succeeded: %@", user.identity);
+    if (!self.isParent && simulateReconnection) {
+        [self disableNetworking];
+        [self enableNetworkingAfter:10];
+        [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+            static int i = 0;
+            NSLog(@"%@", @(i));
+        }];
+    }
+    RLMRealm *realm = [self immediatelyOpenRealmForURL:url
+                                                  user:user
+                                         encryptionKey:nil
+                                            stopPolicy:RLMSyncStopPolicyAfterChangesUploaded];
+    NSLog(@"Opening Realm succeeded: %@", realm);
     if (self.isParent) {
         CHECK_COUNT(0, SyncObject, realm);
         RLMRunChildAndWait();
-        if (simulateReconnection) {
-            [self disableNetworking];
-            [self enableNetworkingAfter:10];
-        }
         [self waitForDownloadsForUser:user realms:@[realm] realmURLs:@[url] expectedCounts:@[@3]];
     } else {
         // Add objects.
         [self addSyncObjectsToRealm:realm descriptions:@[@"child-1", @"child-2", @"child-3"]];
-        if (simulateReconnection) {
-            [self disableNetworking];
-            [self enableNetworkingAfter:10];
-        }
         [self waitForUploadsForUser:user url:url];
         CHECK_COUNT(3, SyncObject, realm);
     }
