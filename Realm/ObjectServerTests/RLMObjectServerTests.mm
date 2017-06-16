@@ -466,7 +466,6 @@
 - (void)verifyAddObjectsWithUsername:(NSString *)username
                             relamURL:(NSURL *)url
                 simulateReconnection:(BOOL)simulateReconnection {
-    NSLog(@"%s", __func__);
     NSLog(@"isParent: %d", self.isParent);
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:username
                                                                                             register:self.isParent]
@@ -474,11 +473,7 @@
     NSLog(@"Login succeeded: %@", user.identity);
     if (!self.isParent && simulateReconnection) {
         [self disableNetworking];
-        [self enableNetworkingAfter:10];
-        [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-            static int i = 0;
-            NSLog(@"%@", @(i));
-        }];
+        [self enableNetworkingAfter:15];
     }
     RLMRealm *realm = [self immediatelyOpenRealmForURL:url
                                                   user:user

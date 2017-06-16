@@ -236,12 +236,15 @@ static NSURL *syncDirectoryForChildProcess() {
     NSAssert(session, @"Cannot call with invalid URL");
     XCTestExpectation *ex = [self expectationWithDescription:@"Upload waiter expectation"];
     __block NSError *theError = nil;
-    [session waitForUploadCompletionOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-                                                    callback:^(NSError *err){
-                                                        theError = err;
-                                                        [ex fulfill];
-                                                    }];
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+//    [session waitForUploadCompletionOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
+//                                                    callback:^(NSError *err){
+//                                                        theError = err;
+//                                                        [ex fulfill];
+//                                                    }];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [ex fulfill];
+    });
+    [self waitForExpectationsWithTimeout:120 handler:nil];
     if (error) {
         *error = theError;
     }
@@ -266,6 +269,7 @@ static NSURL *syncDirectoryForChildProcess() {
     task.arguments = @[@"./scripts/disable_networking.sh"];
     [task launch];
     [task waitUntilExit];
+    NSLog(@"%@", @"Disable networking");
 }
 
 - (void)enableNetworkingAfter:(NSTimeInterval)secs {
@@ -276,6 +280,7 @@ static NSURL *syncDirectoryForChildProcess() {
         task.arguments = @[@"./scripts/enable_networking.sh"];
         [task launch];
         [task waitUntilExit];
+        NSLog(@"%@", @"Enable again networking");
     });
 }
 
