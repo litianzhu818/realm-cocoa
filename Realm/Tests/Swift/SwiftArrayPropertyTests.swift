@@ -48,7 +48,7 @@ class SwiftArrayPropertyTests: RLMTestCase {
         let arrayObjects = SwiftArrayPropertyObject.allObjects(in: realm)
 
         XCTAssertEqual(arrayObjects.count, UInt(1), "There should be a single SwiftStringObject in the realm")
-        let cmp = (arrayObjects.firstObject() as! SwiftArrayPropertyObject).array.firstObject()!
+        let cmp = arrayObjects.firstObject()!.array.firstObject()!
         XCTAssertTrue(string.isEqual(to: cmp), "First array object should be the string object we added")
     }
 
